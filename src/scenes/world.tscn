@@ -1,0 +1,208 @@
+[gd_scene load_steps=14 format=3 uid="uid://uqndpavu7l4y"]
+
+[ext_resource type="Script" path="res://src/scripts/Gimbal.gd" id="1_p6771"]
+[ext_resource type="Script" path="res://src/scripts/Show_Options_VB.gd" id="2_3c50l"]
+[ext_resource type="Script" path="res://src/scripts/FPS_Label.gd" id="2_k3ldn"]
+[ext_resource type="Script" path="res://src/scripts/Grenade_Spawner.gd" id="2_ssmrr"]
+[ext_resource type="Script" path="res://src/scripts/Enviroment_Toggle.gd" id="3_603ek"]
+[ext_resource type="Script" path="res://src/scripts/fps_lock_Toggle.gd" id="4_443jj"]
+[ext_resource type="Script" path="res://src/scripts/shadow_Toggle.gd" id="4_w57hy"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e0fda"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_55is3"]
+sky_material = SubResource("ProceduralSkyMaterial_e0fda")
+
+[sub_resource type="Environment" id="Environment_4kop2"]
+background_mode = 2
+sky = SubResource("Sky_55is3")
+tonemap_mode = 2
+glow_blend_mode = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_o1rqe"]
+size = Vector2(16, 16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ff80y"]
+size = Vector3(16, 1, 16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2uc06"]
+size = Vector3(16, 16, 1)
+
+[node name="World" type="Node3D"]
+
+[node name="Lighting" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lighting"]
+unique_name_in_owner = true
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Lighting"]
+unique_name_in_owner = true
+environment = SubResource("Environment_4kop2")
+
+[node name="Gimbal" type="Node3D" parent="."]
+script = ExtResource("1_p6771")
+
+[node name="Camera3D" type="Camera3D" parent="Gimbal"]
+transform = Transform3D(1, 0, 0, 0, 0.86747, 0.497489, 0, -0.497489, 0.86747, 0, 1.80207, 2.56172)
+current = true
+fov = 70.0
+
+[node name="Meshes" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="Meshes"]
+
+[node name="Floor" type="CSGMesh3D" parent="Meshes/Floor"]
+mesh = SubResource("PlaneMesh_o1rqe")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Meshes/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_ff80y")
+
+[node name="Wall_01" type="StaticBody3D" parent="Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Meshes/Wall_01"]
+shape = SubResource("BoxShape3D_2uc06")
+
+[node name="Wall_02" type="StaticBody3D" parent="Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Meshes/Wall_02"]
+shape = SubResource("BoxShape3D_2uc06")
+
+[node name="Wall_03" type="StaticBody3D" parent="Meshes"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 8.5, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Meshes/Wall_03"]
+shape = SubResource("BoxShape3D_2uc06")
+
+[node name="Wall_04" type="StaticBody3D" parent="Meshes"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -8.5, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Meshes/Wall_04"]
+shape = SubResource("BoxShape3D_2uc06")
+
+[node name="Grenade_Spawner" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("2_ssmrr")
+amount = 800
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VB" type="VBoxContainer" parent="UI"]
+layout_mode = 0
+offset_right = 179.0
+offset_bottom = 295.0
+
+[node name="PC" type="PanelContainer" parent="UI/VB"]
+layout_mode = 2
+
+[node name="MC" type="MarginContainer" parent="UI/VB/PC"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VB" type="VBoxContainer" parent="UI/VB/PC/MC"]
+layout_mode = 2
+
+[node name="CheckButton" type="CheckButton" parent="UI/VB/PC/MC/VB" node_paths=PackedStringArray("Option_Node")]
+layout_mode = 2
+focus_mode = 0
+button_pressed = true
+text = "Show Settings"
+script = ExtResource("2_3c50l")
+Option_Node = NodePath("../Options")
+
+[node name="Options" type="VBoxContainer" parent="UI/VB/PC/MC/VB"]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="UI/VB/PC/MC/VB/Options"]
+layout_mode = 2
+
+[node name="FPS_Label" type="Label" parent="UI/VB/PC/MC/VB/Options"]
+layout_mode = 2
+text = "FPS: 00"
+script = ExtResource("2_k3ldn")
+fps_type = true
+
+[node name="FPSPhysics_Label" type="Label" parent="UI/VB/PC/MC/VB/Options"]
+layout_mode = 2
+text = "FPS: 00"
+script = ExtResource("2_k3ldn")
+
+[node name="HSeparator2" type="HSeparator" parent="UI/VB/PC/MC/VB/Options"]
+layout_mode = 2
+
+[node name="fps_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+layout_mode = 2
+focus_mode = 0
+button_pressed = true
+text = "fps lock"
+alignment = 2
+script = ExtResource("4_443jj")
+
+[node name="shadow_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+layout_mode = 2
+focus_mode = 0
+text = "shadow"
+alignment = 2
+script = ExtResource("4_w57hy")
+
+[node name="ssao_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+layout_mode = 2
+focus_mode = 0
+text = "ao"
+alignment = 2
+script = ExtResource("3_603ek")
+
+[node name="ssil_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+layout_mode = 2
+focus_mode = 0
+text = "ssil"
+alignment = 2
+script = ExtResource("3_603ek")
+_key = "ssil"
+
+[node name="glow_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+layout_mode = 2
+focus_mode = 0
+text = "glow"
+alignment = 2
+script = ExtResource("3_603ek")
+_key = "glow"
+
+[node name="fog_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+layout_mode = 2
+focus_mode = 0
+text = "fog"
+alignment = 2
+script = ExtResource("3_603ek")
+_key = "fog"
+
+[node name="volumetric_fog_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+layout_mode = 2
+focus_mode = 0
+text = "volumetric_fog"
+alignment = 2
+script = ExtResource("3_603ek")
+_key = "volumetric_fog"
+
+[node name="sdfgi_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+layout_mode = 2
+focus_mode = 0
+text = "sdfgi"
+alignment = 2
+script = ExtResource("3_603ek")
+_key = "sdfgi"

@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://ou3ntficd2pd"]
+
+[ext_resource type="PackedScene" uid="uid://dgnl0wrqkyxc6" path="res://model_source/Grenade_01/Grenade_01.glb" id="1_t50em"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8wpsi"]
+radius = 0.1
+height = 0.25
+
+[node name="Grenade_01" type="RigidBody3D"]
+linear_velocity = Vector3(1, 5, 0)
+
+[node name="Mesh" parent="." instance=ExtResource("1_t50em")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_8wpsi")
