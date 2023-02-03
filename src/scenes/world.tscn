@@ -1,12 +1,17 @@
-[gd_scene load_steps=14 format=3 uid="uid://uqndpavu7l4y"]
+[gd_scene load_steps=20 format=3 uid="uid://uqndpavu7l4y"]
 
 [ext_resource type="Script" path="res://src/scripts/Gimbal.gd" id="1_p6771"]
 [ext_resource type="Script" path="res://src/scripts/Show_Options_VB.gd" id="2_3c50l"]
 [ext_resource type="Script" path="res://src/scripts/FPS_Label.gd" id="2_k3ldn"]
 [ext_resource type="Script" path="res://src/scripts/Grenade_Spawner.gd" id="2_ssmrr"]
 [ext_resource type="Script" path="res://src/scripts/Enviroment_Toggle.gd" id="3_603ek"]
+[ext_resource type="Script" path="res://src/scripts/Quit_Button.gd" id="3_h0jvf"]
 [ext_resource type="Script" path="res://src/scripts/fps_lock_Toggle.gd" id="4_443jj"]
 [ext_resource type="Script" path="res://src/scripts/shadow_Toggle.gd" id="4_w57hy"]
+[ext_resource type="Script" path="res://src/scripts/Modular_Slider_VB.gd" id="5_c88yy"]
+[ext_resource type="Script" path="res://src/scripts/Grenades_Label.gd" id="5_ooet1"]
+[ext_resource type="Script" path="res://src/scripts/Key_Slider_ViewportShrink.gd" id="6_k12a7"]
+[ext_resource type="Script" path="res://src/scripts/Filter_Modes.gd" id="8_d2vwb"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e0fda"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -30,67 +35,10 @@ size = Vector3(16, 1, 16)
 [sub_resource type="BoxShape3D" id="BoxShape3D_2uc06"]
 size = Vector3(16, 16, 1)
 
-[node name="World" type="Node3D"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m7e4q"]
+bg_color = Color(0, 0, 0, 0.901961)
 
-[node name="Lighting" type="Node3D" parent="."]
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lighting"]
-unique_name_in_owner = true
-transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="Lighting"]
-unique_name_in_owner = true
-environment = SubResource("Environment_4kop2")
-
-[node name="Gimbal" type="Node3D" parent="."]
-script = ExtResource("1_p6771")
-
-[node name="Camera3D" type="Camera3D" parent="Gimbal"]
-transform = Transform3D(1, 0, 0, 0, 0.86747, 0.497489, 0, -0.497489, 0.86747, 0, 1.80207, 2.56172)
-current = true
-fov = 70.0
-
-[node name="Meshes" type="Node3D" parent="."]
-
-[node name="Floor" type="StaticBody3D" parent="Meshes"]
-
-[node name="Floor" type="CSGMesh3D" parent="Meshes/Floor"]
-mesh = SubResource("PlaneMesh_o1rqe")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Meshes/Floor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-shape = SubResource("BoxShape3D_ff80y")
-
-[node name="Wall_01" type="StaticBody3D" parent="Meshes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8.5)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Meshes/Wall_01"]
-shape = SubResource("BoxShape3D_2uc06")
-
-[node name="Wall_02" type="StaticBody3D" parent="Meshes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8.5)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Meshes/Wall_02"]
-shape = SubResource("BoxShape3D_2uc06")
-
-[node name="Wall_03" type="StaticBody3D" parent="Meshes"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 8.5, 0, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Meshes/Wall_03"]
-shape = SubResource("BoxShape3D_2uc06")
-
-[node name="Wall_04" type="StaticBody3D" parent="Meshes"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -8.5, 0, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Meshes/Wall_04"]
-shape = SubResource("BoxShape3D_2uc06")
-
-[node name="Grenade_Spawner" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-script = ExtResource("2_ssmrr")
-amount = 800
-
-[node name="UI" type="Control" parent="."]
+[node name="World" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -98,15 +46,108 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VB" type="VBoxContainer" parent="UI"]
+[node name="3DVC" type="SubViewportContainer" parent="."]
+texture_filter = 1
+texture_repeat = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="3DViewport" type="SubViewport" parent="3DVC"]
+unique_name_in_owner = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+canvas_item_default_texture_filter = 0
+positional_shadow_atlas_size = 512
+positional_shadow_atlas_quad_0 = 1
+positional_shadow_atlas_quad_1 = 1
+positional_shadow_atlas_quad_2 = 2
+positional_shadow_atlas_quad_3 = 3
+size = Vector2i(1280, 800)
+render_target_clear_mode = 1
+render_target_update_mode = 4
+
+[node name="Lighting" type="Node3D" parent="3DVC/3DViewport"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="3DVC/3DViewport/Lighting"]
+unique_name_in_owner = true
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+shadow_blur = 0.7
+directional_shadow_mode = 1
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="3DVC/3DViewport/Lighting"]
+unique_name_in_owner = true
+environment = SubResource("Environment_4kop2")
+
+[node name="Gimbal" type="Node3D" parent="3DVC/3DViewport"]
+script = ExtResource("1_p6771")
+
+[node name="Camera3D" type="Camera3D" parent="3DVC/3DViewport/Gimbal"]
+transform = Transform3D(1, 0, 0, 0, 0.86747, 0.497489, 0, -0.497489, 0.86747, 0, 1.80207, 2.56172)
+doppler_tracking = 2
+current = true
+fov = 60.0
+near = 0.1
+far = 100.0
+
+[node name="Meshes" type="Node3D" parent="3DVC/3DViewport"]
+
+[node name="Floor" type="StaticBody3D" parent="3DVC/3DViewport/Meshes"]
+
+[node name="Floor" type="CSGMesh3D" parent="3DVC/3DViewport/Meshes/Floor"]
+mesh = SubResource("PlaneMesh_o1rqe")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="3DVC/3DViewport/Meshes/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_ff80y")
+
+[node name="Wall_01" type="StaticBody3D" parent="3DVC/3DViewport/Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="3DVC/3DViewport/Meshes/Wall_01"]
+shape = SubResource("BoxShape3D_2uc06")
+
+[node name="Wall_02" type="StaticBody3D" parent="3DVC/3DViewport/Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="3DVC/3DViewport/Meshes/Wall_02"]
+shape = SubResource("BoxShape3D_2uc06")
+
+[node name="Wall_03" type="StaticBody3D" parent="3DVC/3DViewport/Meshes"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 8.5, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="3DVC/3DViewport/Meshes/Wall_03"]
+shape = SubResource("BoxShape3D_2uc06")
+
+[node name="Wall_04" type="StaticBody3D" parent="3DVC/3DViewport/Meshes"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -8.5, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="3DVC/3DViewport/Meshes/Wall_04"]
+shape = SubResource("BoxShape3D_2uc06")
+
+[node name="Grenade_Spawner" type="Node3D" parent="3DVC/3DViewport"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("2_ssmrr")
+amount = 800
+
+[node name="UI_VB" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_right = 179.0
-offset_bottom = 295.0
+offset_right = 200.0
+offset_bottom = 519.0
+scale = Vector2(1.55, 1.55)
 
-[node name="PC" type="PanelContainer" parent="UI/VB"]
+[node name="PC" type="PanelContainer" parent="UI_VB"]
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m7e4q")
 
-[node name="MC" type="MarginContainer" parent="UI/VB/PC"]
+[node name="MC" type="MarginContainer" parent="UI_VB/PC"]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_constants/margin_left = 8
@@ -114,10 +155,31 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="VB" type="VBoxContainer" parent="UI/VB/PC/MC"]
+[node name="VB" type="VBoxContainer" parent="UI_VB/PC/MC"]
+custom_minimum_size = Vector2(165, 0)
 layout_mode = 2
 
-[node name="CheckButton" type="CheckButton" parent="UI/VB/PC/MC/VB" node_paths=PackedStringArray("Option_Node")]
+[node name="Quit_Button" type="Button" parent="UI_VB/PC/MC/VB"]
+layout_mode = 2
+text = "Exit Game"
+alignment = 0
+script = ExtResource("3_h0jvf")
+
+[node name="FPS_Label" type="Label" parent="UI_VB/PC/MC/VB"]
+layout_mode = 2
+text = "FPS: 00"
+script = ExtResource("2_k3ldn")
+fps_type = true
+
+[node name="Grenades_Label" type="Label" parent="UI_VB/PC/MC/VB"]
+layout_mode = 2
+text = "Grenades: 00"
+script = ExtResource("5_ooet1")
+
+[node name="HSeparator2" type="HSeparator" parent="UI_VB/PC/MC/VB"]
+layout_mode = 2
+
+[node name="CheckButton" type="CheckButton" parent="UI_VB/PC/MC/VB" node_paths=PackedStringArray("Option_Node")]
 layout_mode = 2
 focus_mode = 0
 button_pressed = true
@@ -125,27 +187,61 @@ text = "Show Settings"
 script = ExtResource("2_3c50l")
 Option_Node = NodePath("../Options")
 
-[node name="Options" type="VBoxContainer" parent="UI/VB/PC/MC/VB"]
+[node name="Options" type="VBoxContainer" parent="UI_VB/PC/MC/VB"]
 layout_mode = 2
 
-[node name="HSeparator" type="HSeparator" parent="UI/VB/PC/MC/VB/Options"]
+[node name="Options_SC" type="ScrollContainer" parent="UI_VB/PC/MC/VB/Options"]
+custom_minimum_size = Vector2(136, 363)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Options_VB" type="VBoxContainer" parent="UI_VB/PC/MC/VB/Options/Options_SC"]
 layout_mode = 2
 
-[node name="FPS_Label" type="Label" parent="UI/VB/PC/MC/VB/Options"]
+[node name="FPSPhysics_Label" type="Label" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB"]
+visible = false
 layout_mode = 2
 text = "FPS: 00"
 script = ExtResource("2_k3ldn")
-fps_type = true
 
-[node name="FPSPhysics_Label" type="Label" parent="UI/VB/PC/MC/VB/Options"]
-layout_mode = 2
-text = "FPS: 00"
-script = ExtResource("2_k3ldn")
-
-[node name="HSeparator2" type="HSeparator" parent="UI/VB/PC/MC/VB/Options"]
+[node name="HSeparator" type="HSeparator" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB"]
 layout_mode = 2
 
-[node name="fps_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+[node name="Filter_Modes" type="OptionButton" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB"]
+visible = false
+layout_mode = 2
+item_count = 4
+selected = 0
+popup/item_0/text = "Nearest"
+popup/item_0/id = 0
+popup/item_1/text = "Linear"
+popup/item_1/id = 1
+popup/item_2/text = "Linear Mipmap"
+popup/item_2/id = 2
+popup/item_3/text = "Nearest Mipmap"
+popup/item_3/id = 3
+script = ExtResource("8_d2vwb")
+
+[node name="Stretch_Slider" type="VBoxContainer" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB"]
+layout_mode = 2
+script = ExtResource("5_c88yy")
+
+[node name="Label" type="Label" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB/Stretch_Slider"]
+layout_mode = 2
+text = "Downsample"
+
+[node name="Slider" type="HSlider" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB/Stretch_Slider"]
+layout_mode = 2
+min_value = -5.0
+max_value = -1.0
+value = -1.0
+tick_count = 5
+ticks_on_borders = true
+
+[node name="Key" type="Node" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB/Stretch_Slider"]
+script = ExtResource("6_k12a7")
+
+[node name="fps_Toggle" type="CheckButton" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB"]
 layout_mode = 2
 focus_mode = 0
 button_pressed = true
@@ -153,21 +249,21 @@ text = "fps lock"
 alignment = 2
 script = ExtResource("4_443jj")
 
-[node name="shadow_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+[node name="shadow_Toggle" type="CheckButton" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB"]
 layout_mode = 2
 focus_mode = 0
 text = "shadow"
 alignment = 2
 script = ExtResource("4_w57hy")
 
-[node name="ssao_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+[node name="ssao_Toggle" type="CheckButton" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB"]
 layout_mode = 2
 focus_mode = 0
 text = "ao"
 alignment = 2
 script = ExtResource("3_603ek")
 
-[node name="ssil_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+[node name="ssil_Toggle" type="CheckButton" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB"]
 layout_mode = 2
 focus_mode = 0
 text = "ssil"
@@ -175,7 +271,7 @@ alignment = 2
 script = ExtResource("3_603ek")
 _key = "ssil"
 
-[node name="glow_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+[node name="glow_Toggle" type="CheckButton" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB"]
 layout_mode = 2
 focus_mode = 0
 text = "glow"
@@ -183,7 +279,7 @@ alignment = 2
 script = ExtResource("3_603ek")
 _key = "glow"
 
-[node name="fog_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+[node name="fog_Toggle" type="CheckButton" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB"]
 layout_mode = 2
 focus_mode = 0
 text = "fog"
@@ -191,7 +287,7 @@ alignment = 2
 script = ExtResource("3_603ek")
 _key = "fog"
 
-[node name="volumetric_fog_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+[node name="volumetric_fog_Toggle" type="CheckButton" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB"]
 layout_mode = 2
 focus_mode = 0
 text = "volumetric_fog"
@@ -199,10 +295,12 @@ alignment = 2
 script = ExtResource("3_603ek")
 _key = "volumetric_fog"
 
-[node name="sdfgi_Toggle" type="CheckButton" parent="UI/VB/PC/MC/VB/Options"]
+[node name="sdfgi_Toggle" type="CheckButton" parent="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB"]
 layout_mode = 2
 focus_mode = 0
 text = "sdfgi"
 alignment = 2
 script = ExtResource("3_603ek")
 _key = "sdfgi"
+
+[connection signal="item_selected" from="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB/Filter_Modes" to="UI_VB/PC/MC/VB/Options/Options_SC/Options_VB/Filter_Modes" method="_on_item_selected"]

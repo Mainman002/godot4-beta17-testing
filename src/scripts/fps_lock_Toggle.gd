@@ -6,7 +6,7 @@ func _ready() -> void:
 func _toggled(_val:bool) -> void:
 	if _val: 
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
-		Engine.max_fps = 30
+		Engine.max_fps = 50
 	else: 
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 		Engine.max_fps = 0

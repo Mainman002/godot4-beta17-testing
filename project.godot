@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Hello_Compat"
+config/name="Stress Test"
 run/main_scene="res://src/scenes/world.tscn"
 config/features=PackedStringArray("4.0", "GL Compatibility")
 config/icon="res://icon.svg"
@@ -19,11 +19,20 @@ config/icon="res://icon.svg"
 
 window/size/viewport_width=1280
 window/size/viewport_height=800
-window/vsync/vsync_mode=0
+window/size/mode=2
+window/size/resizable=false
+window/size/borderless=true
+window/size/always_on_top=true
 window/stretch/mode="viewport"
-window/stretch/aspect="keep_height"
+window/stretch/aspect="expand"
 
 [physics]
 
-common/physics_ticks_per_second=30
+2d/run_on_separate_thread=true
+3d/run_on_separate_thread=true
+common/physics_ticks_per_second=40
 common/max_physics_steps_per_frame=4
+
+[rendering]
+
+global_illumination/gi/use_half_resolution=true

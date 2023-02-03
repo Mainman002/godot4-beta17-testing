@@ -11,7 +11,7 @@ func _ready() -> void:
 	randomize()
 
 func _process(_delta) -> void:
-	if get_child_count() < amount:
+	if Engine.get_frames_per_second() > 49:
 		random_direction.x = randi_range( -5, 5 )
 		random_direction.y = randi_range( -5, 5 )
 		random_direction.z = randi_range( -5, 5 )
